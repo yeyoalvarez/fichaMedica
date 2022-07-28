@@ -1,0 +1,81 @@
+version: "3"
+
+services:
+  django:
+    build:
+      context: .
+    container_name: ficha_medica
+    image: ficha_django
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - DEBUG=True
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    command: uvicorn --reload fichaMedica.asgi:application --host 0.0.0.0 --log-level debug --use-colors --loop uvloop
+    healthcheck:
+      test: curl -f http://localhost:8000/api/docs/ || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    networks:
+      - ficha-main
+
+  redis:
+    image: redis:5.0-alpine
+    container_name: ficha_redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - ficha-main
+
+  db:
+    image: postgres:13-alpine
+    container_name: ficha_bd
+    env_file:
+      - .env
+    volumes:
+      - ficha-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - ficha-main
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=root
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'gregorgg23@gmail.com'
+      PGADMIN_DEFAULT_PASSWORD: 'root'
+    ports:
+      - '80:80'
+    depends_on:
+      - postgres
+
+volumes:
+  ficha-db-data:
+
+networks:
+  ficha-main:
+    driver: bridge
