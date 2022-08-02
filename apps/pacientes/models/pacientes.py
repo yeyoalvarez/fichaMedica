@@ -1,5 +1,4 @@
 from django.db import models
-
 from apps.pacientes.models.base import BaseModel
 
 
@@ -51,10 +50,12 @@ class paciente(BaseModel):
         verbose_name = 'Paciente'
         verbose_name_plural = 'Pacientes'
 
+    def __str__(self):
+        return f"{self.nombres} {self.apellidos}"
 
 class historial_paciente(BaseModel):
-    paciente = models.ForeignKey("historial_paciente.paciente",
-                                 on_delete=models.PROTECT, related_name="Ficha de Paciente")
+    paciente = models.ForeignKey("paciente",
+                                 on_delete=models.PROTECT, related_name="Ficha")
     temperatura = models.IntegerField(blank=True, null=True)
     peso = models.IntegerField(blank=True, null=True)
     altura = models.IntegerField(blank=True, null=True)
@@ -64,3 +65,7 @@ class historial_paciente(BaseModel):
     class Meta:
         verbose_name = 'Historial Paciente'
         verbose_name_plural = 'Historial Pacientes'
+
+    def __str__(self):
+        return f" {self.paciente.nombres} {self.paciente.apellidos} Fecha {self.creado.date()}"
+
