@@ -35,8 +35,8 @@ class paciente(BaseModel):
     ci = models.IntegerField(blank=False)
     genero = models.CharField(choices=GENERO, max_length=10, blank=False)
     tipo_sangre = models.CharField(choices=TIPOS_SANGRE, max_length=8, blank=True)
-    signo_sangre = models.CharField(choices=SIGNOS_SANGRE, max_length=8, blank=True)
-    seguro = models.ForeignKey(seguro_medico, on_delete=models.CASCADE, blank=True,
+    signo_sangre = models.CharField('', help_text='Tipo de sangre ej: A+, AB-', choices=SIGNOS_SANGRE, max_length=8, blank=True)
+    seguro = models.ForeignKey(seguro_medico, help_text='Seguro Medico', on_delete=models.CASCADE, blank=True,
                                related_name="Seguro_Medico", null=True)
     numero_seguro = models.IntegerField(blank=True, null=True)
     direccion = models.CharField(max_length=255, blank=True)
@@ -63,9 +63,11 @@ class historial_paciente(BaseModel):
     diagnostico = models.CharField(max_length=500, blank=True)
 
     class Meta:
-        verbose_name = 'Historial Paciente'
-        verbose_name_plural = 'Historial Pacientes'
+        verbose_name = 'Historial Del Paciente'
+        verbose_name_plural = 'Historial del Paciente'
 
     def __str__(self):
         return f" {self.paciente.nombres} {self.paciente.apellidos} Fecha {self.creado.date()}"
 
+    def get_fecha_creacion(self):
+        return f"Fecha {self.creado.date()}"
