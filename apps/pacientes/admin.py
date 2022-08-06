@@ -8,13 +8,13 @@ from .models.pacientes import *
 
 class historial_pacienteAdmin(admin.TabularInline):
     model = historial_paciente
-    fieldsets = (
-             ('Datos Libro', {
-                 'fields': ('temperatura', 'peso', 'altura',
-                            'sintomas','diagnostico')
-             }),
-    )
-    extra = 2
+    # fieldsets = (
+    #          ('Datos Libro', {
+    #              'fields': ('temperatura', 'peso', 'altura',
+    #                         'sintomas','diagnostico')
+    #          }),
+    # )
+    extra = 1
 
 
 @admin.register(paciente)

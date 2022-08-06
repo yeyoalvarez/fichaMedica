@@ -58,6 +58,8 @@ class historial_paciente(BaseModel):
                                  on_delete=models.PROTECT, related_name="Ficha")
     temperatura = models.IntegerField(blank=True, null=True)
     peso = models.IntegerField(blank=True, null=True)
+    indice_masa = models.FloatField(blank=True, null=True)
+    hipertension_arterial = models.FloatField(blank=True, null=True)
     altura = models.IntegerField(blank=True, null=True)
     sintomas = models.CharField(max_length=500, blank=True)
     diagnostico = models.CharField(max_length=500, blank=True)
