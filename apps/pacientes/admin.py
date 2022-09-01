@@ -2,25 +2,20 @@ from django.contrib import admin
 from .models.pacientes import *
 
 
-# class historial_pacienteResource(resources.ModelResource):
-#     class Meta:
-#         model = historial_paciente
-
 class historial_pacienteAdmin(admin.TabularInline):
     model = historial_paciente
-    # fieldsets = (
-    #          ('Datos Libro', {
-    #              'fields': ('temperatura', 'peso', 'altura',
-    #                         'sintomas','diagnostico')
-    #          }),
-    # )
+    extra = 1
+
+
+class triaje_pacienteAdmin(admin.TabularInline):
+    model = triaje
     extra = 1
 
 
 @admin.register(paciente)
 class pacienteAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'ci']
-    inlines = [historial_pacienteAdmin]
+    inlines = [historial_pacienteAdmin, triaje_pacienteAdmin]
     search_fields = ['nombres','apellidos', 'ci']
     fieldsets = (
             ('Datos Personales',{

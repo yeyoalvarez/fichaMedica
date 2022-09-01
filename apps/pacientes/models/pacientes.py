@@ -2,8 +2,7 @@ from django.db import models
 from apps.pacientes.models.base import BaseModel
 
 
-class seguro_medico(BaseModel):
-    id_seguro_medico = models.AutoField(primary_key=True)
+class seguro_medico(models.Model):
     nombre_seguro = models.CharField(max_length=255)
 
     class Meta:
@@ -13,8 +12,7 @@ class seguro_medico(BaseModel):
     def __str__(self):
         return self.nombre_seguro
 
-
-class paciente(BaseModel):
+class paciente(models.Model):
     GENERO = (
         ('Masculino', 'M'),
         ('Femenino', 'F')
@@ -29,7 +27,6 @@ class paciente(BaseModel):
         ('POSTIVO', '+'),
         ('NEGATIVO', '-')
     )
-    id_paciente = models.AutoField(primary_key=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     ci = models.IntegerField(blank=False)
@@ -55,7 +52,7 @@ class paciente(BaseModel):
 
 class historial_paciente(BaseModel):
     paciente = models.ForeignKey("paciente",
-                                 on_delete=models.PROTECT, related_name="Ficha")
+                                 on_delete=models.PROTECT, related_name="Paciente")
     temperatura = models.IntegerField(blank=True, null=True)
     peso = models.IntegerField(blank=True, null=True)
     indice_masa = models.FloatField(blank=True, null=True)
@@ -63,13 +60,27 @@ class historial_paciente(BaseModel):
     altura = models.IntegerField(blank=True, null=True)
     sintomas = models.CharField(max_length=500, blank=True)
     diagnostico = models.CharField(max_length=500, blank=True)
+    triaje = models.ForeignKey("triaje",
+                                 on_delete=models.PROTECT, related_name="Triajes")
 
     class Meta:
         verbose_name = 'Historial Del Paciente'
         verbose_name_plural = 'Historial del Paciente'
 
-    def __str__(self):
-        return f" {self.paciente.nombres} {self.paciente.apellidos} Fecha {self.creado.date()}"
 
     def get_fecha_creacion(self):
         return f"Fecha {self.creado.date()}"
+
+class triaje(models.Model):
+    paciente = models.ForeignKey("paciente",
+                                 on_delete=models.PROTECT, related_name="PacienteTriaje")
+    frecuencia_cardiaca = models.FloatField(blank=True, null=True, default=0)
+    frecuencia_respiratoria = models.FloatField(blank=True, null=True, default=0)
+    saturacion = models.FloatField(blank=True, null=True, default=0)
+
+    class Meta:
+        verbose_name = 'Triajes'
+        verbose_name_plural = 'Triajes'
+
+    def __str__(self):
+        return f"{self.saturacion}"
