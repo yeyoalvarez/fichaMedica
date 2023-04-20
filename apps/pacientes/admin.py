@@ -1,33 +1,41 @@
 from django.contrib import admin
 from .models.pacientes import *
+from django.forms import Textarea
 
 
-class historial_pacienteAdmin(admin.TabularInline):
+class historial_pacienteAdmin(admin.StackedInline):
     model = historial_paciente
-    extra = 1
+    extra = 0
+    formfield_overrides = {
+        models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
+    }
 
 
 class triaje_pacienteAdmin(admin.TabularInline):
     model = triaje
-    extra = 1
+    extra = 0
 
 
 @admin.register(paciente)
 class pacienteAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'ci']
     inlines = [historial_pacienteAdmin, triaje_pacienteAdmin]
-    search_fields = ['nombres','apellidos', 'ci']
+    search_fields = ['nombres', 'apellidos', 'ci']
     fieldsets = (
-            ('Datos Personales',{
-                'fields': ('nombres','apellidos',
-                        ('ci', 'genero'),
-                        ('tipo_sangre','signo_sangre'),
-                        ('seguro','numero_seguro'),
-                        ('direccion'), 'telefono')
-            }),
+        ('Datos Personales', {
+            'fields': ('nombres', 'apellidos',
+                       ('ci', 'genero'),
+                       ('tipo_sangre', 'signo_sangre'),
+                       ('seguro', 'numero_seguro'),
+                       ('direccion'), 'telefono')
+        }),
     )
+
 
 @admin.register(seguro_medico)
 class seguro_medicoAdmin(admin.ModelAdmin):
     list_display = ['nombre_seguro']
     search_fields = ['nombre_seguro']
+
+
+admin.site.register(triaje)

@@ -1,5 +1,7 @@
 from django.db import models
 from apps.pacientes.models.base import BaseModel
+from django.utils import timezone
+
 
 
 class seguro_medico(models.Model):
@@ -51,6 +53,7 @@ class paciente(models.Model):
         return f"{self.nombres} {self.apellidos}"
 
 class historial_paciente(BaseModel):
+    fecha_consulta = models.DateField(default=timezone.now)
     paciente = models.ForeignKey("paciente",
                                  on_delete=models.PROTECT, related_name="Paciente")
     temperatura = models.IntegerField(blank=True, null=True)
@@ -60,8 +63,9 @@ class historial_paciente(BaseModel):
     altura = models.IntegerField(blank=True, null=True)
     sintomas = models.CharField(max_length=500, blank=True)
     diagnostico = models.CharField(max_length=500, blank=True)
+    estudios = models.ImageField(upload_to='estudios/', blank=True, null=True)
     triaje = models.ForeignKey("triaje",
-                                 on_delete=models.PROTECT, related_name="Triajes")
+                                 on_delete=models.PROTECT, related_name="Triajes", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Historial Del Paciente'
@@ -71,16 +75,17 @@ class historial_paciente(BaseModel):
     def get_fecha_creacion(self):
         return f"Fecha {self.creado.date()}"
 
-class triaje(models.Model):
+class triaje(BaseModel):
     paciente = models.ForeignKey("paciente",
                                  on_delete=models.PROTECT, related_name="PacienteTriaje")
     frecuencia_cardiaca = models.FloatField(blank=True, null=True, default=0)
     frecuencia_respiratoria = models.FloatField(blank=True, null=True, default=0)
     saturacion = models.FloatField(blank=True, null=True, default=0)
+    fecha_consulta = models.DateField(default=timezone.now)
 
     class Meta:
         verbose_name = 'Triajes'
         verbose_name_plural = 'Triajes'
 
     def __str__(self):
-        return f"{self.saturacion}"
+        return f"{self.paciente} Fecha {self.fecha_consulta}"
