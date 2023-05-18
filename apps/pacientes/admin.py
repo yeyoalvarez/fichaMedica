@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models.pacientes import *
 from django.forms import Textarea
+from django.utils.html import format_html
 
 
 class historial_pacienteAdmin(admin.StackedInline):
@@ -9,6 +10,9 @@ class historial_pacienteAdmin(admin.StackedInline):
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
     }
+    #
+    # def imagen (self, obj):
+    #     return format_html('<img src= {} width="130" height="100" />', obj.avatar.url)
 
 
 class triaje_pacienteAdmin(admin.TabularInline):
