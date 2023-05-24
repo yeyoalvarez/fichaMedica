@@ -41,6 +41,7 @@ class paciente(models.Model):
     direccion = models.CharField(max_length=255, blank=True)
     telefono = models.IntegerField(blank=True, null=True)
     notas = models.CharField(max_length=500, blank=True)
+    hipertension_arterial = models.FloatField(blank=True, null=True)
 
     def get_full_name(self):
         return f"{self.nombres} {self.apellidos}"
@@ -52,28 +53,37 @@ class paciente(models.Model):
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
 
+
 class historial_paciente(BaseModel):
     fecha_consulta = models.DateField(default=timezone.now)
     paciente = models.ForeignKey("paciente",
                                  on_delete=models.PROTECT, related_name="Paciente")
-    temperatura = models.IntegerField(blank=True, null=True)
     peso = models.IntegerField(blank=True, null=True)
     indice_masa = models.FloatField(blank=True, null=True)
-    hipertension_arterial = models.FloatField(blank=True, null=True)
     altura = models.IntegerField(blank=True, null=True)
+    motivo_consulta = models.CharField(max_length=500, blank=True)
     sintomas = models.CharField(max_length=500, blank=True)
     diagnostico = models.CharField(max_length=500, blank=True)
-    estudios = models.ImageField(upload_to='estudios/', blank=True, null=True)
-    triaje = models.ForeignKey("triaje",
-                                 on_delete=models.PROTECT, related_name="Triajes", blank=True, null=True)
+    tratamiento = models.CharField(max_length=500, blank=True)
+    app = models.CharField(max_length=500, blank=True)
+    # triaje = models.ForeignKey("triaje",
+    #                              on_delete=models.PROTECT, related_name="Triajes", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Historial Del Paciente'
         verbose_name_plural = 'Historial del Paciente'
 
-
     def get_fecha_creacion(self):
         return f"Fecha {self.creado.date()}"
+
+
+class imagenEstudios(models.Model):
+    imagen = models.ImageField(upload_to='estudios/', blank=True, null=True)
+    estudio = models.ForeignKey(paciente, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Estudio'
+        verbose_name_plural = 'Estudios'
 
 class triaje(BaseModel):
     paciente = models.ForeignKey("paciente",
@@ -82,6 +92,7 @@ class triaje(BaseModel):
     frecuencia_respiratoria = models.FloatField(blank=True, null=True, default=0)
     saturacion = models.FloatField(blank=True, null=True, default=0)
     fecha_consulta = models.DateField(default=timezone.now)
+    temperatura = models.IntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Triajes'

@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models.pacientes import *
 from django.forms import Textarea
 from django.utils.html import format_html
-
+import PIL as pillow
+from PIL import Image
 
 class historial_pacienteAdmin(admin.StackedInline):
     model = historial_paciente
@@ -11,8 +12,10 @@ class historial_pacienteAdmin(admin.StackedInline):
         models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
     }
     #
-    # def imagen (self, obj):
-    #     return format_html('<img src= {} width="130" height="100" />', obj.avatar.url)
+    # def imagen(self, obj):
+    #     return format_html('<img src= {} width="130" height="100" />', obj.estudios.url)
+    list_display = ['admin_estudio']
+    list_per_page = 1
 
 
 class triaje_pacienteAdmin(admin.TabularInline):
@@ -20,10 +23,15 @@ class triaje_pacienteAdmin(admin.TabularInline):
     extra = 0
 
 
+class imagenEstudiosAdmin(admin.TabularInline):
+    model = imagenEstudios
+    extra = 0
+
+
 @admin.register(paciente)
 class pacienteAdmin(admin.ModelAdmin):
-    list_display = ['get_full_name', 'ci']
-    inlines = [historial_pacienteAdmin, triaje_pacienteAdmin]
+    list_display = ['get_full_name', 'ci', ]
+    inlines = [historial_pacienteAdmin, triaje_pacienteAdmin, imagenEstudiosAdmin]
     search_fields = ['nombres', 'apellidos', 'ci']
     fieldsets = (
         ('Datos Personales', {
