@@ -3,7 +3,6 @@ from apps.pacientes.models.base import BaseModel
 from django.utils import timezone
 
 
-
 class seguro_medico(models.Model):
     nombre_seguro = models.CharField(max_length=255)
 

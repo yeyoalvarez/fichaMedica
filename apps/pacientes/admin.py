@@ -7,25 +7,26 @@ from PIL import Image
 
 class historial_pacienteAdmin(admin.StackedInline):
     model = historial_paciente
-    extra = 0
+    extra = 10
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
     }
-    #
-    # def imagen(self, obj):
-    #     return format_html('<img src= {} width="130" height="100" />', obj.estudios.url)
     list_display = ['admin_estudio']
-    list_per_page = 1
+
+    class Media:
+        js = ['js/collapsed-stacked-inlines.js']
 
 
 class triaje_pacienteAdmin(admin.TabularInline):
     model = triaje
     extra = 0
+    classes = ['collapse']
 
 
 class imagenEstudiosAdmin(admin.TabularInline):
     model = imagenEstudios
     extra = 0
+    classes = ['collapse']
 
 
 @admin.register(paciente)
@@ -35,13 +36,14 @@ class pacienteAdmin(admin.ModelAdmin):
     search_fields = ['nombres', 'apellidos', 'ci']
     fieldsets = (
         ('Datos Personales', {
-            'fields': ('nombres', 'apellidos',
+            'fields': ( ('nombres', 'apellidos'),
                        ('ci', 'genero'),
                        ('tipo_sangre', 'signo_sangre'),
                        ('seguro', 'numero_seguro'),
-                       ('direccion'), 'telefono')
+                       ('direccion', 'telefono'))
         }),
     )
+    classes = ['collapse']
 
 
 @admin.register(seguro_medico)

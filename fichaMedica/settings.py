@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['localhost']
 
 DJANGO_APPS = [
     # 'jazzmin',
+    # 'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,6 +48,7 @@ DJANGO_APPS = [
 # Our agendamiento
 LOCAL_APPS = [
     'apps.pacientes',
+    'servicios',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
