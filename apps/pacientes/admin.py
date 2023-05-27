@@ -7,7 +7,7 @@ from PIL import Image
 
 class historial_pacienteAdmin(admin.StackedInline):
     model = historial_paciente
-    extra = 10
+    extra = 0
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
     }
