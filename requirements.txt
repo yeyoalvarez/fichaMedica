@@ -81,3 +81,4 @@ websockets==10.3
 whitenoise==6.0.0
 wrapt==1.14.1
 pillow==9.4.0
+gunicorn==58.1.0
