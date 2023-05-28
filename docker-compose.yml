@@ -8,8 +8,6 @@ services:
     image: ficha_django
     volumes:
       - .:/app
-      - ./django:/usr/src/app
-      - ./django/static:/usr/src/app/contactto/static
     env_file:
       - .env
     environment:
@@ -66,7 +64,6 @@ services:
       - djangonetwork
 
   postgres:
-    container_name: clinica_postgres
     image: postgres
     restart: always
     ports:
@@ -76,9 +73,6 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=root
-    volumes:
-      - clinica_pgdata:/var/lib/postgresql/data
-      - ./sockets:/var/run/postgresql
 
   pgadmin:
     image: dpage/pgadmin4

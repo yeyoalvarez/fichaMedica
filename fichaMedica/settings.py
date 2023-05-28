@@ -92,23 +92,16 @@ WSGI_APPLICATION = 'fichaMedica.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": env.str("POSTGRES_DB", "root"),
-#         "USER": env.str("POSTGRES_USER", "root"),
-#         "PASSWORD": env.str("POSTGRES_PASSWORD", "root"),
-#         "HOST": env.str("POSTGRES_HOST", "db"),
-#         "PORT": env.int("POSTGRES_PORT", 5432),
-#         "ATOMIC_REQUESTS": True,
-#     },
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "mydatabase",
-    }
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str("POSTGRES_DB", "root"),
+        "USER": env.str("POSTGRES_USER", "root"),
+        "PASSWORD": env.str("POSTGRES_PASSWORD", "root"),
+        "HOST": env.str("POSTGRES_HOST", "db"),
+        "PORT": env.int("POSTGRES_PORT", 5432),
+        "ATOMIC_REQUESTS": True,
+    },
 }
 
 
