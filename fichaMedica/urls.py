@@ -12,7 +12,7 @@ admin.site.site_title = 'Consultorio'
 
 urlpatterns = [
 #   path('grappelli/', include('grappelli.urls')),
-    path('admin/', admin.site.urls),
+    path('', admin.site.urls),
 ]
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {
