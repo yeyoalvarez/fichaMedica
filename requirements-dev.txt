@@ -80,3 +80,4 @@ wcwidth==0.2.5
 websockets==10.3
 whitenoise==6.0.0
 wrapt==1.14.1
+pillow==9.4.0
