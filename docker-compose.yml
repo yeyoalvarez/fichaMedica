@@ -8,6 +8,8 @@ services:
     image: ficha_django
     volumes:
       - .:/app
+      - ./django:/usr/src/app
+      - ./django/static:/usr/src/app/contactto/static
     env_file:
       - .env
     environment:
@@ -24,7 +26,7 @@ services:
       timeout: 10s
       retries: 3
     networks:
-      - ficha-main
+      - djangonetwork
 
   redis:
     image: redis:5.0-alpine
@@ -35,7 +37,7 @@ services:
       timeout: 3s
       retries: 30
     networks:
-      - ficha-main
+      - djangonetwork
 
   db:
     image: postgres:13-alpine
@@ -52,9 +54,19 @@ services:
       timeout: 3s
       retries: 30
     networks:
-      - ficha-main
+      - djangonetwork
+
+  web:
+    build: .
+    depends_on:
+      - db
+    links:
+      - db:db
+    networks:
+      - djangonetwork
 
   postgres:
+    container_name: clinica_postgres
     image: postgres
     restart: always
     ports:
@@ -64,6 +76,9 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=root
+    volumes:
+      - clinica_pgdata:/var/lib/postgresql/data
+      - ./sockets:/var/run/postgresql
 
   pgadmin:
     image: dpage/pgadmin4
@@ -79,5 +94,5 @@ volumes:
   ficha-db-data:
 
 networks:
-  ficha-main:
+  djangonetwork:
     driver: bridge
