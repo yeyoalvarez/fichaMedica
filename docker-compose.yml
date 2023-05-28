@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nginx:
-    container_name: clinica_nginx
+    container_name: clinica6mayo_nginx
     image: nginx:alpine
     depends_on:
       - django
@@ -51,19 +51,29 @@ services:
   db:
     image: postgres:13-alpine
     container_name: ficha_bd
+    restart: always
     env_file:
       - .env
     volumes:
       - ficha-db-data:/var/lib/postgresql/data
     environment:
+        - POSTGRES_USER=root
         - POSTGRES_PASSWORD=root
-    healthcheck:
-      test: ["CMD", "pg_isready"]
-      interval: 1s
-      timeout: 3s
-      retries: 30
-    networks:
-      - djangonetwork
+        - POSTGRES_DB=root
+#    healthcheck:
+#      test: ["CMD", "pg_isready"]
+#      interval: 1s
+#      timeout: 3s
+#      retries: 30
+    ports:
+      - "5433:5432"
+
+
+  aprrka:
+    restart: always
+    build: .
+    depends_on:
+      - db
 
   web:
     build: .
@@ -75,28 +85,38 @@ services:
       - djangonetwork
 
   postgres:
-    image: postgres
-    restart: always
-    ports:
-      - "5432:5432"
+    container_name: clinica6mayo_postgres
+    image: postgres:13-alpine
     environment:
-      - DATABASE_HOST=127.0.0.1
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=root
+    ports:
+      - "5433:5432"
+    volumes:
+      - clinica6mayo_pgdata:/var/lib/postgresql/data
+      - ./sockets:/var/run/postgresq
+    hostname: clinica6mayo_postgres
 
   pgadmin:
-    image: dpage/pgadmin4
+    container_name: clinica6mayo_pgadmin
+    image: dpage/pgadmin4:7.0
     environment:
-      PGADMIN_DEFAULT_EMAIL: 'gregorgg23@gmail.com'
-      PGADMIN_DEFAULT_PASSWORD: 'root'
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+      - PGADMIN_DISABLE_POSTFIX=true
+      - PGADMIN_LISTEN_ADDRESS=0.0.0.0
+      - GUNICORN_THREADS=1
     ports:
-      - '80:80'
+      - "8081:80"
     depends_on:
       - postgres
+    volumes:
+      - clinica_pgadmindata:/var/lib/pgadmin
 
 volumes:
-  ficha-db-data:
+  clinica6mayo_pgdata:
+  clinica6mayo_pgadmindata:
 
 networks:
   djangonetwork:

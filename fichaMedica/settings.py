@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-(2gmb)7qtd37xdc9ils5vmirx@)vz&s*#%t3ogx5t2+4gp%w9g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '3.15.159.54']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'fichaMedica.wsgi.application'
 #         "NAME": env.str("POSTGRES_DB", "root"),
 #         "USER": env.str("POSTGRES_USER", "root"),
 #         "PASSWORD": env.str("POSTGRES_PASSWORD", "root"),
-#         "HOST": env.str("POSTGRES_HOST", "db"),
+#         "HOST": env.str("POSTGRES_HOST", "postgres"),
 #         "PORT": env.int("POSTGRES_PORT", 5432),
 #         "ATOMIC_REQUESTS": True,
 #     },
