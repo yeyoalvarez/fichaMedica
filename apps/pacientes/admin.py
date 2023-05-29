@@ -4,6 +4,8 @@ from django.forms import Textarea
 from django.utils.html import format_html
 import PIL as pillow
 from PIL import Image
+from .models.consultas import *
+
 
 class historial_pacienteAdmin(admin.StackedInline):
     model = historial_paciente
@@ -36,20 +38,38 @@ class pacienteAdmin(admin.ModelAdmin):
     search_fields = ['nombres', 'apellidos', 'ci']
     fieldsets = (
         ('Datos Personales', {
-            'fields': ( ('nombres', 'apellidos'),
+            'fields': (('nombres', 'apellidos'),
                        ('ci', 'genero'),
                        ('tipo_sangre', 'signo_sangre'),
                        ('seguro', 'numero_seguro'),
                        ('direccion', 'telefono'))
         }),
     )
-    classes = ['collapse']
 
 
 @admin.register(seguro_medico)
 class seguro_medicoAdmin(admin.ModelAdmin):
     list_display = ['nombre_seguro']
     search_fields = ['nombre_seguro']
+
+
+@admin.register(especialidad)
+class especialidadAdmin(admin.ModelAdmin):
+    model = especialidad
+    search_fields = ['nombre']
+
+
+@admin.register(medico)
+class medicoAdmin(admin.ModelAdmin):
+    list_display = ['nombres', 'apellidos', 'ci']
+    search_fields = ['nombres', 'apellidos', 'especialidad', 'ci']
+    autocomplete_fields = ['especialidad']
+
+
+@admin.register(consulta)
+class consultaAdmin(admin.ModelAdmin):
+    list_display = ['paciente', 'fecha_consulta', 'medico',]
+    autocomplete_fields = ['paciente', 'medico']
 
 
 admin.site.register(triaje)
