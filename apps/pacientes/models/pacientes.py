@@ -1,6 +1,9 @@
 from django.db import models
 from apps.pacientes.models.base import BaseModel
 from django.utils import timezone
+from .consultas import consulta
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, post_save, post_delete
 
 
 class seguro_medico(models.Model):
@@ -12,6 +15,7 @@ class seguro_medico(models.Model):
 
     def __str__(self):
         return self.nombre_seguro
+
 
 class paciente(models.Model):
     GENERO = (
@@ -65,8 +69,6 @@ class historial_paciente(BaseModel):
     diagnostico = models.CharField(max_length=500, blank=True)
     tratamiento = models.CharField(max_length=500, blank=True)
     app = models.CharField(max_length=500, blank=True)
-    # triaje = models.ForeignKey("triaje",
-    #                              on_delete=models.PROTECT, related_name="Triajes", blank=True, null=True)
 
     class Meta:
         verbose_name = 'Historial Del Paciente'
@@ -74,6 +76,15 @@ class historial_paciente(BaseModel):
 
     def get_fecha_creacion(self):
         return f"Fecha {self.creado.date()}"
+
+
+# instance es el registro que se maneja
+@receiver([post_save], sender=paciente)
+def update_consulta(sender, instance, **kwargs):
+    if con := consulta.objects.filter(paciente=instance).last():
+        con.consulta_realizada = True
+        con.save()
+
 
 
 class imagenEstudios(models.Model):

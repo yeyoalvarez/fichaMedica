@@ -54,8 +54,8 @@ services:
     restart: always
     env_file:
       - .env
-    volumes:
-      - ficha-db-data:/var/lib/postgresql/data
+#    volumes:
+#      - ficha-db-data:/var/lib/postgresql/data
     environment:
         - POSTGRES_USER=root
         - POSTGRES_PASSWORD=root
@@ -111,8 +111,8 @@ services:
       - "8081:80"
     depends_on:
       - postgres
-    volumes:
-      - clinica_pgadmindata:/var/lib/pgadmin
+#    volumes:
+#      - clinica_pgadmindata:/var/lib/pgadmin
 
 volumes:
   clinica6mayo_pgdata:

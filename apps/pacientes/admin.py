@@ -5,9 +5,11 @@ from django.utils.html import format_html
 import PIL as pillow
 from PIL import Image
 from .models.consultas import *
+from django.views.generic.detail import DetailView
+from rangefilter.filters import DateRangeFilter
 
 
-class historial_pacienteAdmin(admin.StackedInline):
+class historial_pacienteAdmin(admin.StackedInline, DetailView):
     model = historial_paciente
     extra = 0
     formfield_overrides = {
@@ -31,6 +33,18 @@ class imagenEstudiosAdmin(admin.TabularInline):
     classes = ['collapse']
 
 
+@admin.register(consulta)
+class consultaAdmin(admin.ModelAdmin):
+    list_display = ['paciente', 'fecha_consulta', 'medico', 'consulta_realizada']
+    autocomplete_fields = ['paciente', 'medico']
+    list_filter = [('fecha_consulta', DateRangeFilter),]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.medico.usuario = request.user
+        return form
+
+
 @admin.register(paciente)
 class pacienteAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'ci', ]
@@ -45,6 +59,14 @@ class pacienteAdmin(admin.ModelAdmin):
                        ('direccion', 'telefono'))
         }),
     )
+
+    def get_context_data(self, **kwargs):
+        context = super(historial_pacienteAdmin, self).historial_pacienteAdmin(**kwargs)
+        obj = self.pacientes_consulta.get_object()
+        obj.pacientes_consulta.consulta_realizada = True
+        obj.save()
+
+        return context
 
 
 @admin.register(seguro_medico)
@@ -63,13 +85,7 @@ class especialidadAdmin(admin.ModelAdmin):
 class medicoAdmin(admin.ModelAdmin):
     list_display = ['nombres', 'apellidos', 'ci']
     search_fields = ['nombres', 'apellidos', 'especialidad', 'ci']
-    autocomplete_fields = ['especialidad']
-
-
-@admin.register(consulta)
-class consultaAdmin(admin.ModelAdmin):
-    list_display = ['paciente', 'fecha_consulta', 'medico',]
-    autocomplete_fields = ['paciente', 'medico']
+    autocomplete_fields = ['especialidad', 'usuario',]
 
 
 admin.site.register(triaje)
