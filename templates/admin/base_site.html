@@ -10,6 +10,8 @@
         <img src="{% static 'logo.png' %}" height="40px" />
     </a>
 </h1>
+
+    <l1><a href="#">{{ request.user }} - {{ request.user.first_name }}</a></l1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}

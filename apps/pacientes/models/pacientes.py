@@ -44,7 +44,6 @@ class paciente(models.Model):
     direccion = models.CharField(max_length=255, blank=True)
     telefono = models.IntegerField(blank=True, null=True)
     notas = models.CharField(max_length=500, blank=True)
-    hipertension_arterial = models.FloatField(blank=True, null=True)
 
     def get_full_name(self):
         return f"{self.nombres} {self.apellidos}"
@@ -61,9 +60,7 @@ class historial_paciente(BaseModel):
     fecha_consulta = models.DateField(default=timezone.now)
     paciente = models.ForeignKey("paciente",
                                  on_delete=models.PROTECT, related_name="Paciente")
-    peso = models.IntegerField(blank=True, null=True)
     indice_masa = models.FloatField(blank=True, null=True)
-    altura = models.IntegerField(blank=True, null=True)
     motivo_consulta = models.CharField(max_length=500, blank=True)
     sintomas = models.CharField(max_length=500, blank=True)
     diagnostico = models.CharField(max_length=500, blank=True)
@@ -101,8 +98,10 @@ class triaje(BaseModel):
     frecuencia_cardiaca = models.FloatField(blank=True, null=True, default=0)
     frecuencia_respiratoria = models.FloatField(blank=True, null=True, default=0)
     saturacion = models.FloatField(blank=True, null=True, default=0)
-    fecha_consulta = models.DateField(default=timezone.now)
     temperatura = models.IntegerField(blank=True, null=True)
+    peso = models.IntegerField(help_text='en kg',blank=True, null=True)
+    altura = models.IntegerField(help_text='en cm',blank=True, null=True)
+    fecha_consulta = models.DateField(default=timezone.now)
 
     class Meta:
         verbose_name = 'Triajes'
@@ -110,3 +109,11 @@ class triaje(BaseModel):
 
     def __str__(self):
         return f"{self.paciente} Fecha {self.fecha_consulta}"
+
+
+# @receiver([post_save], sender=triaje)
+# def update_masa(sender, instance, **kwargs):
+#     obj = pacientes_historial_paciente.get_object.last()
+#     if con := pacientes_triaje.objects.filter(paciente=instance).last():
+#         obj.indice_masa = con.peso / (con.altura*con.altura*0.01)
+#         obj.save()
