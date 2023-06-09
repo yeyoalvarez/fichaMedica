@@ -107,7 +107,7 @@ WSGI_APPLICATION = 'fichaMedica.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "6demayodb",
+        "NAME": "db6demayo",
         'USER': 'ypsoftware',
         'PASSWORD': 'ypsoftware2023'
     }
