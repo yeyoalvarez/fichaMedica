@@ -102,7 +102,7 @@ class triaje(BaseModel):
     peso = models.IntegerField(help_text='en kg', blank=True, null=True, default=0)
     altura = models.IntegerField(help_text='en cm', blank=True, null=True, default=0)
     fecha_consulta = models.DateField(default=timezone.now)
-    indice_masa = models.FloatField(blank=True, null=True, default=0,)
+    indice_masa = models.FloatField(blank=True, null=True, default=0, help_text='valor calculado por peso y altura')
 
     class Meta:
         verbose_name = 'Triajes'

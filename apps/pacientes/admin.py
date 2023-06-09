@@ -16,7 +16,7 @@ class historial_pacienteAdmin(admin.StackedInline, DetailView):
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
     }
-    readonly_fields = 'indice_masa'
+    # readonly_fields = 'indice_masa'
 
     class Media:
         js = ['js/collapsed-stacked-inlines.js']
