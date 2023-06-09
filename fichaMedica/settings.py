@@ -108,6 +108,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": "6demayodb",
+        'USER': 'ypsoftware',
+        'PASSWORD': 'ypsoftware2023'
     }
 }
 
