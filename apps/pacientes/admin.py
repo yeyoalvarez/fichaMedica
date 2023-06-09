@@ -12,11 +12,11 @@ from django.views import generic
 
 class historial_pacienteAdmin(admin.StackedInline, DetailView):
     model = historial_paciente
-    extra = 1
+    extra = 0
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
     }
-    list_display = ['admin_estudio']
+    readonly_fields = 'indice_masa'
 
     class Media:
         js = ['js/collapsed-stacked-inlines.js']
@@ -26,6 +26,10 @@ class triaje_pacienteAdmin(admin.TabularInline):
     model = triaje
     extra = 0
     classes = ['collapse']
+
+
+class listAllSizes(admin.ModelAdmin):
+    list_display = ['paciente', 'fecha_consulta', 'indice_masa']
 
 
 class imagenEstudiosAdmin(admin.TabularInline):
@@ -51,7 +55,7 @@ class consultaAdmin(admin.ModelAdmin):
 
 @admin.register(paciente)
 class pacienteAdmin(admin.ModelAdmin):
-    list_display = ['get_full_name', 'ci', ]
+    list_display = ['get_full_name', 'ci']
     inlines = [triaje_pacienteAdmin, historial_pacienteAdmin, imagenEstudiosAdmin]
     search_fields = ['nombres', 'apellidos', 'ci']
     fieldsets = (
@@ -92,4 +96,4 @@ class medicoAdmin(admin.ModelAdmin):
     autocomplete_fields = ['especialidad', 'usuario',]
 
 
-admin.site.register(triaje)
+admin.site.register(triaje,listAllSizes)

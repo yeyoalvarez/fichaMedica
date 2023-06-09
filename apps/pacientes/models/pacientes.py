@@ -37,7 +37,8 @@ class paciente(models.Model):
     ci = models.IntegerField(blank=False)
     genero = models.CharField(choices=GENERO, max_length=10, blank=False)
     tipo_sangre = models.CharField(choices=TIPOS_SANGRE, max_length=8, blank=True)
-    signo_sangre = models.CharField('', help_text='Tipo de sangre ej: A+, AB-', choices=SIGNOS_SANGRE, max_length=8, blank=True)
+    signo_sangre = models.CharField('', help_text='Tipo de sangre ej: A+, AB-', choices=SIGNOS_SANGRE, max_length=8,
+                                    blank=True)
     seguro = models.ForeignKey(seguro_medico, help_text='Seguro Medico', on_delete=models.CASCADE, blank=True,
                                related_name="Seguro_Medico", null=True)
     numero_seguro = models.IntegerField(blank=True, null=True)
@@ -60,7 +61,6 @@ class historial_paciente(BaseModel):
     fecha_consulta = models.DateField(default=timezone.now)
     paciente = models.ForeignKey("paciente",
                                  on_delete=models.PROTECT, related_name="Paciente")
-    indice_masa = models.FloatField(blank=True, null=True)
     motivo_consulta = models.CharField(max_length=500, blank=True)
     sintomas = models.CharField(max_length=500, blank=True)
     diagnostico = models.CharField(max_length=500, blank=True)
@@ -83,7 +83,6 @@ def update_consulta(sender, instance, **kwargs):
         con.save()
 
 
-
 class imagenEstudios(models.Model):
     imagen = models.ImageField(upload_to='estudios/', blank=True, null=True)
     estudio = models.ForeignKey(paciente, on_delete=models.CASCADE)
@@ -92,6 +91,7 @@ class imagenEstudios(models.Model):
         verbose_name = 'Estudio'
         verbose_name_plural = 'Estudios'
 
+
 class triaje(BaseModel):
     paciente = models.ForeignKey("paciente",
                                  on_delete=models.PROTECT, related_name="PacienteTriaje")
@@ -99,9 +99,10 @@ class triaje(BaseModel):
     frecuencia_respiratoria = models.FloatField(blank=True, null=True, default=0)
     saturacion = models.FloatField(blank=True, null=True, default=0)
     temperatura = models.IntegerField(blank=True, null=True)
-    peso = models.IntegerField(help_text='en kg',blank=True, null=True)
-    altura = models.IntegerField(help_text='en cm',blank=True, null=True)
+    peso = models.IntegerField(help_text='en kg', blank=True, null=True, default=0)
+    altura = models.IntegerField(help_text='en cm', blank=True, null=True, default=0)
     fecha_consulta = models.DateField(default=timezone.now)
+    indice_masa = models.FloatField(blank=True, null=True, default=0,)
 
     class Meta:
         verbose_name = 'Triajes'
@@ -110,10 +111,6 @@ class triaje(BaseModel):
     def __str__(self):
         return f"{self.paciente} Fecha {self.fecha_consulta}"
 
-
-# @receiver([post_save], sender=triaje)
-# def update_masa(sender, instance, **kwargs):
-#     obj = pacientes_historial_paciente.get_object.last()
-#     if con := pacientes_triaje.objects.filter(paciente=instance).last():
-#         obj.indice_masa = con.peso / (con.altura*con.altura*0.01)
-#         obj.save()
+    def save(self):
+        self.indice_masa = (self.peso / (self.altura * self.altura)) / 0.0001
+        return super(triaje, self).save()
