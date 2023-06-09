@@ -108,8 +108,8 @@ DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         "NAME": "db6demayo",
-        'USER': 'ypsoftware',
-        'PASSWORD': 'ypsoftware2023',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
     }
 }
