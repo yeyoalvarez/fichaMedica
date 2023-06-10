@@ -47,7 +47,7 @@ class consultaAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
 
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.groups.filter(name='administrativo').exists():
             return queryset
         else:
             return queryset.filter(medico__usuario=request.user)
